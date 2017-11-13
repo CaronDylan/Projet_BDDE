@@ -28,7 +28,6 @@ CREATE TABLE Periode(
 CREATE TABLE Tempete(
 	id_tempete INT,
 	type_tempete VARCHAR2(30),
-	force VARCHAR2(1),
 	CONSTRAINT key_tempete PRIMARY KEY(id_tempete));
 
 CREATE TABLE Faits(
