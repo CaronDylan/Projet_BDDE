@@ -6,6 +6,8 @@ Lien des données : https://www.ncdc.noaa.gov/stormevents/ftp.jsp
 
 L'entrepôt de données est réalisé en SQL avec Oracle.
 
+
+Détails sur les fichiers se trouvant ici :
 * Le fichier Create.sql regroupe les requêtes permettant de créer l'Entrepôt de données.
 * Le fichier Insert_genrator.cpp est un programme en C++ permettant de générer le fichier Insert.sql à partir du CSV.
 * Le fichier Insert.sql regroupe les requêtes permettant l'insertion des tuples dans l'Entrepôt de données.
