@@ -82,6 +82,7 @@ struct faits {
 faits init_faits() {
 	faits f1;
 	f1.resume="";
+	return(f1);
 }
 
 
@@ -89,7 +90,7 @@ int main(int argc, char const *argv[]) {
 	ifstream read(argv[1], ios::in);
 	ofstream write(argv[2], ios::out | ios::trunc);
 	//Limite du nombre de tuples
-	const int LIMIT = 1000;
+	const int LIMIT = 1;
 
 	//Initialisation des structures
 	periode pcurrent=init_periode();
@@ -98,7 +99,7 @@ int main(int argc, char const *argv[]) {
 	dommage dcurrent=init_dommage();
 	faits fcurrent=init_faits();
 	
-	string insert[5];
+	string insert[6];
 	insert[0] = "INSERT INTO Periode VALUES(";
 	insert[1] = "INSERT INTO Lieu VALUES(";
 	insert[2] = "INSERT INTO Tempete VALUES(";
@@ -133,7 +134,7 @@ int main(int argc, char const *argv[]) {
 					write << insert[1] +to_string(id)+","+lcurrent.etat+","+lcurrent.ville+");"<<endl;
 					write << insert[2] +to_string(id)+","+tcurrent.type_tempete+");"<<endl;
 					write << insert[3] +to_string(id)+","+dcurrent.propriete+","+dcurrent.agriculture+");"<<endl;
-					write << insert[4] +to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+","+fcurrent.resume+");"<<endl;
+					write << insert[4] +to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+/*","+fcurrent.resume+*/");"<<endl;
 					write <<endl;
 
 					//Reinitialisation des variables propres a chacunes des lignes
@@ -188,7 +189,13 @@ int main(int argc, char const *argv[]) {
 					//EVENT_ID ---> cptvirgule == 7
 
 					//STATE
-					if(cptvirgule==8){lcurrent.etat +=caracter;}
+					if(cptvirgule==8){
+							if(caracter==''') {
+								lcurrent.etat += "'";
+							}else {
+								lcurrent.etat +=caracter;
+							}
+					}
 
 					//STATE_FIPS ---> cptvirgule == 9
 					//YEAR ---> cptvirgule == 10

@@ -17,13 +17,13 @@ CREATE TABLE Periode(
 	mois_debut INT,
 	jour_debut INT,
 	heure_debut INT,
-	min_debut INT
+	min_debut INT,
 	annee_fin INT,
 	mois_fin INT,
 	jour_fin INT,
 	heure_fin INT,
 	min_fin INT,
-	CONSTRAINT key_periode PRIMARY KEY(id_periode);
+	CONSTRAINT key_periode PRIMARY KEY(id_periode));
 
 CREATE TABLE Tempete(
 	id_tempete INT,
@@ -36,7 +36,6 @@ CREATE TABLE Faits(
 	id_lieu INT,
 	id_periode INT,
 	id_tempete INT,
-	description VARCHAR2(1000),
 	CONSTRAINT key_faits PRIMARY KEY(id_faits),
 	CONSTRAINT foreign_key_dommage FOREIGN KEY(id_dommage) REFERENCES Dommage(id_dommage),
 	CONSTRAINT foreign_key_lieu FOREIGN KEY(id_lieu) REFERENCES Lieu(id_lieu),
