@@ -190,8 +190,8 @@ int main(int argc, char const *argv[]) {
 
 					//STATE
 					if(cptvirgule==8){
-							if(caracter==''') {
-								lcurrent.etat += "'";
+							if(caracter=='\'') {
+								lcurrent.etat += '\'';
 							}else {
 								lcurrent.etat +=caracter;
 							}
@@ -208,7 +208,12 @@ int main(int argc, char const *argv[]) {
 					//CZ_FIPS ---> cptvirgule == 14
 
 					//CZ_NAME
-					if(cptvirgule==15){lcurrent.ville +=caracter;}
+					if(cptvirgule==15)
+						if(caracter=='\'') {
+							lcurrent.ville += '\'';
+						}else {
+							lcurrent.ville +=caracter;
+						}
 					
 					//WFO  ---> cptvirgule == 16
 					//BEGIN_DATE_TIME  ---> cptvirgule == 17
