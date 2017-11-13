@@ -13,15 +13,17 @@ CREATE TABLE Lieu(
 
 CREATE TABLE Periode(
 	id_periode INT,
-	annee INT,
-	saison VARCHAR2(10),
-	mois INT,
-	jour INT,
-	date_debut DATE,
-	date_fin DATE,
-	CONSTRAINT key_periode PRIMARY KEY(id_periode),
-	CONSTRAINT check_debut_inf_fin CHECK (date_debut <= date_fin),
-	CONSTRAINT check_debut_not_null check (date_debut IS NOT NULL));
+	annee_debut INT,
+	mois_debut INT,
+	jour_debut INT,
+	heure_debut INT,
+	min_debut INT
+	annee_fin INT,
+	mois_fin INT,
+	jour_fin INT,
+	heure_fin INT,
+	min_fin INT,
+	CONSTRAINT key_periode PRIMARY KEY(id_periode);
 
 CREATE TABLE Tempete(
 	id_tempete INT,
