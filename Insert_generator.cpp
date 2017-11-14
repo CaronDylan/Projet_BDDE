@@ -127,13 +127,14 @@ int main(int argc, char const *argv[]) {
 		int cptanne_month_fin = 0;
 		int cpth_min_deb =0;
 		int cpth_min_fin =0;
+		int in_attribut =0;
 
 		//Compteur utiles à la mise en forme des données pour la table Faits
 		int stop_resume=0;
 		int nb_dquote_resume=0;
 			
 		while(id<LIMIT && read.get(caracter)){
-			if(caracter==',' && cptvirgule!=48) {cptvirgule++;} else {
+			if(caracter==',' && in_attribut==0) {cptvirgule++;} else {
 				if(caracter=='\n') {
 					id++;
 					write << insert[0] +to_string(id)+","+pcurrent.annee_debut+","+pcurrent.mois_debut+","+pcurrent.jour_debut+","+/*pcurrent.heure_debut+","+pcurrent.min_debut+","+*/pcurrent.annee_fin+","+pcurrent.mois_fin+","+pcurrent.jour_fin+/*","+pcurrent.heure_fin+","+pcurrent.min_fin+*/");" <<endl;
@@ -200,7 +201,13 @@ int main(int argc, char const *argv[]) {
 					if(cptvirgule==8){
 							if(caracter=='\"') {
 								lcurrent.etat += '\'';
-							}else {
+								in_attribut++;
+								if(in_attribut ==2) in_attribut =0;
+
+							}else if(caracter =='\'') {
+								lcurrent.etat +="\\'";		
+							
+							}else{
 								lcurrent.etat +=caracter;
 							}
 					}
@@ -213,6 +220,10 @@ int main(int argc, char const *argv[]) {
 					if(cptvirgule==12){
 						if(caracter=='\"') {
 							tcurrent.type_tempete += '\'';
+							in_attribut++;
+							if(in_attribut ==2) in_attribut =0;
+						}else if(caracter =='\'') {
+							tcurrent.type_tempete +="\\'";
 						}else {
 							tcurrent.type_tempete +=caracter;
 						}
@@ -225,7 +236,11 @@ int main(int argc, char const *argv[]) {
 					if(cptvirgule==15) {
 						if(caracter=='\"') {
 							lcurrent.ville += '\'';
-						}else {
+							in_attribut++;
+							if(in_attribut ==2) in_attribut =0;
+						}else if(caracter =='\'') {
+							lcurrent.ville +="\\'";
+						}else{
 							lcurrent.ville +=caracter;
 						}
 					}
@@ -241,8 +256,10 @@ int main(int argc, char const *argv[]) {
 				
 					//DAMAGE_PROPERTY
 					if(cptvirgule==24){
-						if(caracter=='\"') {
-							dcurrent.propriete += '\'';
+						if(caracter=='\"' || caracter=='M' || caracter=='K') {
+							if (caracter=='\''){dcurrent.propriete += '\'';}
+							if (caracter=='M'){dcurrent.propriete += "000000";}
+							if (caracter=='K'){dcurrent.propriete +="000";}
 						}else {
 							dcurrent.propriete +=caracter;
 						}
@@ -250,8 +267,10 @@ int main(int argc, char const *argv[]) {
 
 					//DAMAGE_CROPS
 					if(cptvirgule==25){
-						if(caracter=='\"') {
-							dcurrent.agriculture += '\'';
+						if(caracter=='\"' || caracter=='M' || caracter=='K') {
+							if (caracter=='\''){dcurrent.agriculture += '\'';}
+							if (caracter=='M'){dcurrent.agriculture += "000000";}
+							if (caracter=='K'){dcurrent.agriculture +="000";}
 						}else {
 							dcurrent.agriculture +=caracter;
 						}

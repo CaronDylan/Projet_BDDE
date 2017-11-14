@@ -1,8 +1,8 @@
 --CREATE SEQUENCE for_id START WITH 1 INCREMENT BY 1;
 CREATE TABLE Dommage(
 	id_dommage INT,
-	dommage_sur_propriete VARCHAR2(10),
-	dommage_sur_champs VARCHAR2(10),
+	dommage_sur_propriete INT,
+	dommage_sur_champs INT,
 	CONSTRAINT key_dommage PRIMARY KEY(id_dommage));
 
 CREATE TABLE Lieu(
