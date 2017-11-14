@@ -128,10 +128,6 @@ int main(int argc, char const *argv[]) {
 		int cpth_min_deb =0;
 		int cpth_min_fin =0;
 		int in_attribut =0;
-
-		//Compteur utiles à la mise en forme des données pour la table Faits
-		int stop_resume=0;
-		int nb_dquote_resume=0;
 			
 		while(id<LIMIT && read.get(caracter)){
 			if(caracter==',' && in_attribut==0) {cptvirgule++;} else {
@@ -150,9 +146,6 @@ int main(int argc, char const *argv[]) {
 					cptanne_month_fin = 0;
 					cpth_min_deb =0;
 					cpth_min_fin =0;
-
-					stop_resume=0;
-					nb_dquote_resume=0;
 
 					//Reinitialisation des structures
 					pcurrent=init_periode();
