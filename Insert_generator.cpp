@@ -89,8 +89,11 @@ faits init_faits() {
 int main(int argc, char const *argv[]) {
 	ifstream read(argv[1], ios::in);
 	ofstream write(argv[2], ios::out | ios::trunc);
+	
 	//Limite du nombre de tuples
-	const int LIMIT = 1;
+	int LIMIT;
+	cout << "Combien de tuples à generer ? " <<endl;
+	cin >> LIMIT;
 
 	//Initialisation des structures
 	periode pcurrent=init_periode();
@@ -125,12 +128,15 @@ int main(int argc, char const *argv[]) {
 		int cpth_min_deb =0;
 		int cpth_min_fin =0;
 
+		//Compteur utiles à la mise en forme des données pour la table Faits
+		int stop_resume=0;
+		int nb_dquote_resume=0;
 			
 		while(id<LIMIT && read.get(caracter)){
 			if(caracter==',' && cptvirgule!=48) {cptvirgule++;} else {
 				if(caracter=='\n') {
 					id++;
-					write << insert[0] +to_string(id)+","+pcurrent.annee_debut+","+pcurrent.mois_debut+","+pcurrent.jour_debut+","+pcurrent.heure_debut+","+pcurrent.min_debut+","+pcurrent.annee_fin+","+pcurrent.mois_fin+","+pcurrent.jour_fin+","+pcurrent.heure_fin+","+pcurrent.min_fin+");" <<endl;
+					write << insert[0] +to_string(id)+","+pcurrent.annee_debut+","+pcurrent.mois_debut+","+pcurrent.jour_debut+","+/*pcurrent.heure_debut+","+pcurrent.min_debut+","+*/pcurrent.annee_fin+","+pcurrent.mois_fin+","+pcurrent.jour_fin+/*","+pcurrent.heure_fin+","+pcurrent.min_fin+*/");" <<endl;
 					write << insert[1] +to_string(id)+","+lcurrent.etat+","+lcurrent.ville+");"<<endl;
 					write << insert[2] +to_string(id)+","+tcurrent.type_tempete+");"<<endl;
 					write << insert[3] +to_string(id)+","+dcurrent.propriete+","+dcurrent.agriculture+");"<<endl;
@@ -143,7 +149,9 @@ int main(int argc, char const *argv[]) {
 					cptanne_month_fin = 0;
 					cpth_min_deb =0;
 					cpth_min_fin =0;
-					
+
+					stop_resume=0;
+					nb_dquote_resume=0;
 
 					//Reinitialisation des structures
 					pcurrent=init_periode();
@@ -190,7 +198,7 @@ int main(int argc, char const *argv[]) {
 
 					//STATE
 					if(cptvirgule==8){
-							if(caracter=='\'') {
+							if(caracter=='\"') {
 								lcurrent.etat += '\'';
 							}else {
 								lcurrent.etat +=caracter;
@@ -202,18 +210,25 @@ int main(int argc, char const *argv[]) {
 					//MONTH_NAME ---> cptvirgule == 11
 					
 					//EVENT_TYPE
-					if(cptvirgule==12){tcurrent.type_tempete +=caracter;}
+					if(cptvirgule==12){
+						if(caracter=='\"') {
+							tcurrent.type_tempete += '\'';
+						}else {
+							tcurrent.type_tempete +=caracter;
+						}
+					}
 					
 					//CZ_TYPE ---> cptvirgule == 13
 					//CZ_FIPS ---> cptvirgule == 14
 
 					//CZ_NAME
-					if(cptvirgule==15)
-						if(caracter=='\'') {
+					if(cptvirgule==15) {
+						if(caracter=='\"') {
 							lcurrent.ville += '\'';
 						}else {
 							lcurrent.ville +=caracter;
 						}
+					}
 					
 					//WFO  ---> cptvirgule == 16
 					//BEGIN_DATE_TIME  ---> cptvirgule == 17
@@ -225,10 +240,22 @@ int main(int argc, char const *argv[]) {
 					//DEATHS_INDIRECT  ---> cptvirgule == 23
 				
 					//DAMAGE_PROPERTY
-					if(cptvirgule==24){dcurrent.propriete +=caracter;}
+					if(cptvirgule==24){
+						if(caracter=='\"') {
+							dcurrent.propriete += '\'';
+						}else {
+							dcurrent.propriete +=caracter;
+						}
+					}
 
 					//DAMAGE_CROPS
-					if(cptvirgule==25){dcurrent.agriculture +=caracter;}
+					if(cptvirgule==25){
+						if(caracter=='\"') {
+							dcurrent.agriculture += '\'';
+						}else {
+							dcurrent.agriculture +=caracter;
+						}
+					}
 	
 					//SOURCE  ---> cptvirgule == 26
 					//MAGNITUDE  ---> cptvirgule == 27
@@ -254,11 +281,21 @@ int main(int argc, char const *argv[]) {
 					//EPISODE_NARRATIVE  ---> cptvirgule == 47
 
 					//EVENT NARRATIVE
-					if(cptvirgule==48){fcurrent.resume += caracter;}
-					
-
-					
-					
+					/*if(cptvirgule==48){
+						if(stop_resume == 0) {
+							if (!(caracter == ',' || nb_dquote_resume ==2)){
+								if(caracter=='\"') {
+									fcurrent.resume += '\'';
+								}else if(caracter=='\'') {
+									fcurrent.resume +="\\'";
+								}else {
+									fcurrent.resume += caracter;
+								}
+							} else {
+								stop_resume++;
+							}
+						}
+					}*/				
 					
 				}
 				

@@ -16,13 +16,9 @@ CREATE TABLE Periode(
 	annee_debut INT,
 	mois_debut INT,
 	jour_debut INT,
-	heure_debut INT,
-	min_debut INT,
 	annee_fin INT,
 	mois_fin INT,
 	jour_fin INT,
-	heure_fin INT,
-	min_fin INT,
 	CONSTRAINT key_periode PRIMARY KEY(id_periode));
 
 CREATE TABLE Tempete(
