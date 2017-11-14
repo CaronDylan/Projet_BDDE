@@ -1,0 +1,1199 @@
+SQL> SET ECHO ON;
+SQL> SET SERVEROUTPUT ON SIZE 2000;
+SQL> 
+SQL> 
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 1*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Permet de voir les degats causés sur les propriétes par chacun des types d'intempérie pour chaque mois et voir les degats totaux sur l'année
+SQL> 
+SQL> SELECT mois_debut, type_tempete, SUM(dommage_sur_propriete)
+  2  FROM Faits f, Tempete t, Periode p, Dommage d
+  3  WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage
+  4  GROUP BY ROLLUP(mois_debut, type_tempete);
+
+MOIS_DEBUT TYPE_TEMPETE                   SUM(DOMMAGE_SUR_PROPRIETE)            
+---------- ------------------------------ --------------------------            
+         1 Hail                                             50100006            
+         1 Tornado                                           6670000            
+         1 Thunderstorm Wind                                 1760026            
+         1                                                  58530032            
+         2 Hail                                                10000            
+         2 Tornado                                           6600001            
+         2 Thunderstorm Wind                                 7935000            
+         2                                                  14545001            
+         3 Hail                                             16940016            
+         3 Tornado                                          23685005            
+         3 Thunderstorm Wind                                16100043            
+
+MOIS_DEBUT TYPE_TEMPETE                   SUM(DOMMAGE_SUR_PROPRIETE)            
+---------- ------------------------------ --------------------------            
+         3                                                  56725064            
+         4 Hail                                            147640092            
+         4 Tornado                                         169025008            
+         4 Thunderstorm Wind                               143605118            
+         4 THUNDERSTORM WINDS/FLOODING                          5000            
+         4                                                 460275218            
+         5 Hail                                              7225031            
+         5 Tornado                                          20580002            
+         5 Thunderstorm Wind                                96655129            
+         5                                                 124460162            
+         6 Hail                                             14185055            
+
+MOIS_DEBUT TYPE_TEMPETE                   SUM(DOMMAGE_SUR_PROPRIETE)            
+---------- ------------------------------ --------------------------            
+         6 Tornado                                          98035021            
+         6 HAIL/ICY ROADS                                          0            
+         6 Thunderstorm Wind                               113235350            
+         6                                                 225455426            
+         7 Hail                                             18505022            
+         7 Tornado                                          97045008            
+         7 Thunderstorm Wind                               205920213            
+         7                                                 321470243            
+         8 Hail                                              7333050            
+         8 Tornado                                         113887505            
+         8 Thunderstorm Wind                                46497092            
+
+MOIS_DEBUT TYPE_TEMPETE                   SUM(DOMMAGE_SUR_PROPRIETE)            
+---------- ------------------------------ --------------------------            
+         8                                                 167717647            
+         9 Hail                                             20278005            
+         9 Tornado                                           2006051            
+         9 Thunderstorm Wind                                10087011            
+         9                                                  32371067            
+        10 Hail                                              6620003            
+        10 Tornado                                           7211501            
+        10 Thunderstorm Wind                                 2955014            
+        10                                                  16786518            
+        11 Hail                                                38015            
+        11 Tornado                                         142830000            
+
+MOIS_DEBUT TYPE_TEMPETE                   SUM(DOMMAGE_SUR_PROPRIETE)            
+---------- ------------------------------ --------------------------            
+        11 Thunderstorm Wind                                27174386            
+        11                                                 170042401            
+        12 Hail                                                 5000            
+        12 Tornado                                            550000            
+        12 Thunderstorm Wind                                  505001            
+        12                                                   1060001            
+                                                          1649438780            
+
+51 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 2*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Permet de voir les degats causés par les types de tempete sur chacun des mois et les  degats totaux provoqué par l'ensemble des intempéries sur chacun des mois
+SQL> 
+SQL> SELECT mois_debut, type_tempete, SUM(dommage_sur_propriete  + dommage_sur_champs) AS dommage_cause
+  2  FROM Faits f, Tempete t, Periode p, Dommage d
+  3  WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage
+  4  GROUP BY CUBE(mois_debut, type_tempete);
+
+MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
+---------- ------------------------------ -------------                         
+                                             2153589879                         
+           Hail                               655995375                         
+           Tornado                            703342125                         
+           HAIL/ICY ROADS                             0                         
+           Thunderstorm Wind                  794247379                         
+           THUNDERSTORM WINDS/FLOODING             5000                         
+         1                                     58550032                         
+         1 Hail                                50105006                         
+         1 Tornado                              6680000                         
+         1 Thunderstorm Wind                    1765026                         
+         2                                     14595001                         
+
+MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
+---------- ------------------------------ -------------                         
+         2 Hail                                   10000                         
+         2 Tornado                              6600001                         
+         2 Thunderstorm Wind                    7985000                         
+         3                                    117530069                         
+         3 Hail                                67230020                         
+         3 Tornado                             28835006                         
+         3 Thunderstorm Wind                   21465043                         
+         4                                    466655266                         
+         4 Hail                               151450106                         
+         4 Tornado                            170645014                         
+         4 Thunderstorm Wind                  144555146                         
+
+MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
+---------- ------------------------------ -------------                         
+         4 THUNDERSTORM WINDS/FLOODING             5000                         
+         5                                    200165180                         
+         5 Hail                                81005040                         
+         5 Tornado                             21255004                         
+         5 Thunderstorm Wind                   97905136                         
+         6                                    329830533                         
+         6 Hail                                58525087                         
+         6 Tornado                            103375028                         
+         6 HAIL/ICY ROADS                             0                         
+         6 Thunderstorm Wind                  167930418                         
+         7                                    563210333                         
+
+MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
+---------- ------------------------------ -------------                         
+         7 Hail                               198975036                         
+         7 Tornado                             99365014                         
+         7 Thunderstorm Wind                  264870283                         
+         8                                    171980671                         
+         8 Hail                                11132054                         
+         8 Tornado                            113971505                         
+         8 Thunderstorm Wind                   46877112                         
+         9                                     41933070                         
+         9 Hail                                29730007                         
+         9 Tornado                              2006051                         
+         9 Thunderstorm Wind                   10197012                         
+
+MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
+---------- ------------------------------ -------------                         
+        10                                     17952322                         
+        10 Hail                                 7778004                         
+        10 Tornado                              7214502                         
+        10 Thunderstorm Wind                    2959816                         
+        11                                    170127401                         
+        11 Hail                                   50015                         
+        11 Tornado                            142845000                         
+        11 Thunderstorm Wind                   27232386                         
+        12                                      1060001                         
+        12 Hail                                    5000                         
+        12 Tornado                               550000                         
+
+MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
+---------- ------------------------------ -------------                         
+        12 Thunderstorm Wind                     505001                         
+
+56 rows selected.
+
+SQL> 
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 3*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Donne le nombre de tempete signalé par mois et par état
+SQL> 
+SQL> SELECT etat, mois_debut, COUNT(*) AS nb_tempete
+  2  FROM Periode p, Lieu l, Faits f
+  3  WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode
+  4  GROUP BY (mois_debut,etat)
+  5  ORDER BY (mois_debut);
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+ARKANSAS                                1         27                            
+FLORIDA                                 1         11                            
+LOUISIANA                               1         28                            
+MISSISSIPPI                             1         18                            
+MONTANA                                 1          1                            
+NEW MEXICO                              1          1                            
+NORTH CAROLINA                          1          4                            
+OKLAHOMA                                1          9                            
+TEXAS                                   1         41                            
+ALABAMA                                 2          4                            
+ARIZONA                                 2          3                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+CALIFORNIA                              2          4                            
+FLORIDA                                 2          2                            
+KANSAS                                  2          2                            
+MISSISSIPPI                             2          2                            
+NEBRASKA                                2          1                            
+OHIO                                    2          1                            
+OKLAHOMA                                2         21                            
+OREGON                                  2          1                            
+TENNESSEE                               2          1                            
+TEXAS                                   2         30                            
+ALABAMA                                 3         61                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+ARIZONA                                 3          9                            
+ARKANSAS                                3         23                            
+CALIFORNIA                              3          6                            
+COLORADO                                3          1                            
+IDAHO                                   3          1                            
+ILLINOIS                                3          2                            
+INDIANA                                 3          4                            
+KANSAS                                  3          4                            
+LOUISIANA                               3         37                            
+MICHIGAN                                3          1                            
+MISSISSIPPI                             3         70                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MISSOURI                                3         10                            
+OHIO                                    3          7                            
+OKLAHOMA                                3         71                            
+OREGON                                  3          1                            
+PENNSYLVANIA                            3          2                            
+SOUTH CAROLINA                          3         28                            
+TENNESSEE                               3          9                            
+TEXAS                                   3         41                            
+WISCONSIN                               3          2                            
+ALABAMA                                 4         43                            
+ARIZONA                                 4          2                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+ARKANSAS                                4        200                            
+CALIFORNIA                              4          5                            
+COLORADO                                4         10                            
+ILLINOIS                                4        153                            
+INDIANA                                 4         83                            
+IOWA                                    4        127                            
+KANSAS                                  4        163                            
+LOUISIANA                               4         66                            
+MAINE                                   4          5                            
+MASSACHUSETTS                           4          1                            
+MICHIGAN                                4         71                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MINNESOTA                               4         13                            
+MISSISSIPPI                             4         65                            
+MISSOURI                                4        295                            
+MONTANA                                 4          8                            
+NEBRASKA                                4         52                            
+NEVADA                                  4          2                            
+NEW HAMPSHIRE                           4          1                            
+NEW JERSEY                              4          7                            
+NEW MEXICO                              4          1                            
+NEW YORK                                4         23                            
+NORTH DAKOTA                            4          1                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+OHIO                                    4         84                            
+OKLAHOMA                                4        511                            
+PENNSYLVANIA                            4         24                            
+PUERTO RICO                             4          1                            
+SOUTH CAROLINA                          4         13                            
+SOUTH DAKOTA                            4         26                            
+TENNESSEE                               4         67                            
+TEXAS                                   4        604                            
+UTAH                                    4          3                            
+VERMONT                                 4         13                            
+WASHINGTON                              4          2                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+WEST VIRGINIA                           4         21                            
+WISCONSIN                               4         78                            
+WYOMING                                 4          1                            
+ALABAMA                                 5         39                            
+ARIZONA                                 5          3                            
+ARKANSAS                                5         90                            
+CALIFORNIA                              5          1                            
+COLORADO                                5         57                            
+CONNECTICUT                             5         15                            
+GEORGIA                                 5         53                            
+IDAHO                                   5          9                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+ILLINOIS                                5         14                            
+INDIANA                                 5         37                            
+IOWA                                    5         27                            
+KANSAS                                  5        111                            
+KENTUCKY                                5         11                            
+LOUISIANA                               5        137                            
+MAINE                                   5          2                            
+MARYLAND                                5         15                            
+MASSACHUSETTS                           5          9                            
+MICHIGAN                                5         19                            
+MINNESOTA                               5         41                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MISSISSIPPI                             5         39                            
+MISSOURI                                5         34                            
+MONTANA                                 5         35                            
+NEBRASKA                                5         50                            
+NEVADA                                  5          4                            
+NEW JERSEY                              5          4                            
+NEW MEXICO                              5         52                            
+NEW YORK                                5         13                            
+NORTH CAROLINA                          5         24                            
+NORTH DAKOTA                            5         25                            
+OHIO                                    5         23                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+OKLAHOMA                                5        116                            
+OREGON                                  5          1                            
+PENNSYLVANIA                            5         17                            
+RHODE ISLAND                            5          4                            
+SOUTH CAROLINA                          5         29                            
+SOUTH DAKOTA                            5         28                            
+TENNESSEE                               5         13                            
+TEXAS                                   5        830                            
+UTAH                                    5         20                            
+VIRGINIA                                5         18                            
+WASHINGTON                              5          3                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+WEST VIRGINIA                           5          9                            
+WISCONSIN                               5         34                            
+WYOMING                                 5         11                            
+ALABAMA                                 6         80                            
+ARIZONA                                 6         12                            
+ARKANSAS                                6        305                            
+CALIFORNIA                              6          2                            
+COLORADO                                6         76                            
+CONNECTICUT                             6         10                            
+DELAWARE                                6          3                            
+FLORIDA                                 6        105                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+GEORGIA                                 6        234                            
+IDAHO                                   6          4                            
+ILLINOIS                                6         61                            
+INDIANA                                 6         91                            
+IOWA                                    6        183                            
+KANSAS                                  6        298                            
+KENTUCKY                                6         42                            
+LOUISIANA                               6         56                            
+MAINE                                   6         46                            
+MARYLAND                                6         17                            
+MASSACHUSETTS                           6          5                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MICHIGAN                                6         64                            
+MINNESOTA                               6        124                            
+MISSISSIPPI                             6        137                            
+MISSOURI                                6        183                            
+MONTANA                                 6         46                            
+NEBRASKA                                6        126                            
+NEVADA                                  6          3                            
+NEW HAMPSHIRE                           6          5                            
+NEW JERSEY                              6         46                            
+NEW MEXICO                              6         25                            
+NEW YORK                                6        167                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NORTH DAKOTA                            6         35                            
+OHIO                                    6        258                            
+OKLAHOMA                                6        288                            
+OREGON                                  6          2                            
+PENNSYLVANIA                            6        147                            
+SOUTH CAROLINA                          6        159                            
+SOUTH DAKOTA                            6         76                            
+TENNESSEE                               6        108                            
+TEXAS                                   6        299                            
+VERMONT                                 6          8                            
+VIRGINIA                                6         37                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+WASHINGTON                              6          1                            
+WEST VIRGINIA                           6         89                            
+WISCONSIN                               6         32                            
+WYOMING                                 6         19                            
+ALABAMA                                 7          4                            
+ARIZONA                                 7         17                            
+ARKANSAS                                7        155                            
+CALIFORNIA                              7          1                            
+COLORADO                                7         99                            
+CONNECTICUT                             7         12                            
+DELAWARE                                7          4                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+FLORIDA                                 7         67                            
+GEORGIA                                 7         40                            
+ILLINOIS                                7         58                            
+INDIANA                                 7         43                            
+IOWA                                    7        139                            
+KANSAS                                  7        266                            
+KENTUCKY                                7         23                            
+LOUISIANA                               7         43                            
+MAINE                                   7         23                            
+MASSACHUSETTS                           7         45                            
+MICHIGAN                                7        139                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MINNESOTA                               7         91                            
+MISSISSIPPI                             7         35                            
+MISSOURI                                7         30                            
+MONTANA                                 7         27                            
+NEBRASKA                                7        207                            
+NEVADA                                  7          4                            
+NEW HAMPSHIRE                           7         30                            
+NEW JERSEY                              7         27                            
+NEW MEXICO                              7         30                            
+NEW YORK                                7        275                            
+NORTH CAROLINA                          7         37                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NORTH DAKOTA                            7         51                            
+OHIO                                    7        108                            
+OKLAHOMA                                7        314                            
+OREGON                                  7          1                            
+PENNSYLVANIA                            7        124                            
+RHODE ISLAND                            7          1                            
+SOUTH CAROLINA                          7         24                            
+SOUTH DAKOTA                            7         79                            
+TENNESSEE                               7         12                            
+TEXAS                                   7        169                            
+UTAH                                    7         17                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+VERMONT                                 7         35                            
+WASHINGTON                              7          2                            
+WEST VIRGINIA                           7         30                            
+WISCONSIN                               7        111                            
+WYOMING                                 7         53                            
+ALABAMA                                 8          6                            
+CALIFORNIA                              8          1                            
+COLORADO                                8         27                            
+CONNECTICUT                             8          4                            
+DELAWARE                                8          1                            
+FLORIDA                                 8         61                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+GEORGIA                                 8         26                            
+INDIANA                                 8         17                            
+IOWA                                    8         79                            
+KENTUCKY                                8          1                            
+MAINE                                   8          1                            
+MARYLAND                                8          7                            
+MASSACHUSETTS                           8         11                            
+MINNESOTA                               8        105                            
+MISSISSIPPI                             8          1                            
+MONTANA                                 8         14                            
+NEBRASKA                                8         46                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NEW HAMPSHIRE                           8          2                            
+NEW JERSEY                              8         14                            
+NEW YORK                                8         85                            
+NORTH CAROLINA                          8         57                            
+NORTH DAKOTA                            8         94                            
+OHIO                                    8         84                            
+OKLAHOMA                                8        158                            
+OREGON                                  8          4                            
+PENNSYLVANIA                            8        100                            
+PUERTO RICO                             8          2                            
+RHODE ISLAND                            8          2                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+SOUTH CAROLINA                          8         46                            
+SOUTH DAKOTA                            8         29                            
+TEXAS                                   8        156                            
+VERMONT                                 8          3                            
+VIRGINIA                                8         15                            
+WEST VIRGINIA                           8         13                            
+ALABAMA                                 9          2                            
+ARIZONA                                 9         19                            
+ARKANSAS                                9          1                            
+COLORADO                                9          6                            
+CONNECTICUT                             9          2                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+FLORIDA                                 9         21                            
+GEORGIA                                 9          4                            
+IDAHO                                   9          2                            
+ILLINOIS                                9          2                            
+INDIANA                                 9          3                            
+IOWA                                    9         14                            
+KANSAS                                  9         45                            
+KENTUCKY                                9          6                            
+LOUISIANA                               9          5                            
+MARYLAND                                9          1                            
+MASSACHUSETTS                           9          3                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MICHIGAN                                9         16                            
+MINNESOTA                               9          8                            
+MISSISSIPPI                             9          6                            
+MISSOURI                                9          3                            
+MONTANA                                 9          2                            
+NEBRASKA                                9         22                            
+NEVADA                                  9          3                            
+NEW JERSEY                              9          3                            
+NEW MEXICO                              9          4                            
+NEW YORK                                9          3                            
+NORTH CAROLINA                          9         19                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NORTH DAKOTA                            9         15                            
+OHIO                                    9         39                            
+OKLAHOMA                                9         18                            
+OREGON                                  9          1                            
+PENNSYLVANIA                            9         28                            
+PUERTO RICO                             9          2                            
+SOUTH CAROLINA                          9         18                            
+SOUTH DAKOTA                            9          2                            
+TEXAS                                   9         26                            
+UTAH                                    9          3                            
+VIRGINIA                                9         15                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+WASHINGTON                              9          1                            
+WEST VIRGINIA                           9         27                            
+WISCONSIN                               9         46                            
+ALABAMA                                10          1                            
+ARIZONA                                10          2                            
+ARKANSAS                               10          6                            
+CALIFORNIA                             10          1                            
+COLORADO                               10         32                            
+FLORIDA                                10         23                            
+GEORGIA                                10          6                            
+IDAHO                                  10          2                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+INDIANA                                10          2                            
+IOWA                                   10          9                            
+KANSAS                                 10          9                            
+KENTUCKY                               10          1                            
+LOUISIANA                              10         16                            
+MARYLAND                               10          1                            
+MINNESOTA                              10          5                            
+MISSISSIPPI                            10          5                            
+MISSOURI                               10          2                            
+NEBRASKA                               10         18                            
+NORTH CAROLINA                         10          3                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NORTH DAKOTA                           10          2                            
+OHIO                                   10          1                            
+OKLAHOMA                               10        104                            
+PENNSYLVANIA                           10          2                            
+PUERTO RICO                            10          5                            
+SOUTH CAROLINA                         10          5                            
+SOUTH DAKOTA                           10          9                            
+TEXAS                                  10        182                            
+UTAH                                   10          3                            
+ALABAMA                                11         23                            
+ARKANSAS                               11         83                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+CONNECTICUT                            11          2                            
+FLORIDA                                11         10                            
+ILLINOIS                               11         15                            
+INDIANA                                11         10                            
+IOWA                                   11          2                            
+KANSAS                                 11          1                            
+KENTUCKY                               11          5                            
+LOUISIANA                              11         68                            
+MARYLAND                               11         20                            
+MASSACHUSETTS                          11          1                            
+MISSISSIPPI                            11         44                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+MISSOURI                               11         11                            
+NEW JERSEY                             11          8                            
+NEW YORK                               11          1                            
+OHIO                                   11          4                            
+OKLAHOMA                               11         54                            
+PENNSYLVANIA                           11         17                            
+PUERTO RICO                            11          1                            
+SOUTH CAROLINA                         11          2                            
+TENNESSEE                              11         21                            
+TEXAS                                  11        161                            
+VIRGINIA                               11         14                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+WEST VIRGINIA                          11          1                            
+ALABAMA                                12          2                            
+ARKANSAS                               12          3                            
+FLORIDA                                12          3                            
+GEORGIA                                12          2                            
+MISSISSIPPI                            12          1                            
+OKLAHOMA                               12          6                            
+SOUTH CAROLINA                         12          3                            
+TEXAS                                  12          5                            
+
+350 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 4*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Donne le nombre d'intempéries par Etats durant l'année et le nombre de tempete par mois aux Etats-Unis
+SQL> 
+SQL> SELECT etat, mois_debut, SUM(nb_tempete) AS nb_tempete
+  2  FROM (
+  3  	     SELECT etat, mois_debut, COUNT(*) AS nb_tempete
+  4  	     FROM Periode p, Lieu l, Faits f
+  5  	     WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode
+  6  	     GROUP BY (mois_debut,etat)
+  7  	     ORDER BY (mois_debut)
+  8  	     )
+  9  GROUP BY GROUPING SETS((etat),(mois_debut),());
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+ARKANSAS                                         893                            
+ARIZONA                                           67                            
+IOWA                                             580                            
+VERMONT                                           59                            
+NEW HAMPSHIRE                                     38                            
+MICHIGAN                                         310                            
+MISSISSIPPI                                      423                            
+KENTUCKY                                          89                            
+COLORADO                                         308                            
+NORTH DAKOTA                                     223                            
+NEW JERSEY                                       109                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+OHIO                                             609                            
+ALABAMA                                          265                            
+FLORIDA                                          303                            
+UTAH                                              46                            
+VIRGINIA                                          99                            
+ILLINOIS                                         305                            
+KANSAS                                           899                            
+OKLAHOMA                                        1670                            
+PENNSYLVANIA                                     461                            
+MASSACHUSETTS                                     75                            
+SOUTH DAKOTA                                     249                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NORTH CAROLINA                                   144                            
+WEST VIRGINIA                                    190                            
+NEBRASKA                                         522                            
+WASHINGTON                                         9                            
+SOUTH CAROLINA                                   327                            
+WYOMING                                           84                            
+MAINE                                             77                            
+TEXAS                                           2544                            
+TENNESSEE                                        231                            
+MONTANA                                          133                            
+GEORGIA                                          365                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+NEW YORK                                         567                            
+MARYLAND                                          61                            
+IDAHO                                             18                            
+NEW MEXICO                                       113                            
+NEVADA                                            16                            
+MISSOURI                                         568                            
+CALIFORNIA                                        21                            
+OREGON                                            11                            
+PUERTO RICO                                       11                            
+LOUISIANA                                        456                            
+INDIANA                                          290                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+WISCONSIN                                        303                            
+RHODE ISLAND                                       7                            
+DELAWARE                                           8                            
+MINNESOTA                                        387                            
+CONNECTICUT                                       45                            
+                                        1        140                            
+                                        2         72                            
+                                        3        390                            
+                                        4       2845                            
+                                        5       2126                            
+                                        6       4114                            
+
+ETAT                           MOIS_DEBUT NB_TEMPETE                            
+------------------------------ ---------- ----------                            
+                                        7       3102                            
+                                        8       1272                            
+                                        9        466                            
+                                       10        457                            
+                                       11        579                            
+                                       12         25                            
+                                               15588                            
+
+62 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 5*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Classe les etats en fonction des degats subis sur les champs
+SQL> 
+SQL> SELECT etat, SUM(dommage_sur_champs), rank() over (order by SUM(dommage_sur_champs) desc)
+  2  FROM Faits f, Lieu l, Dommage d
+  3  WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+  4  GROUP BY (etat);
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+NEBRASKA                                     167065001                          
+                                             1                                  
+                                                                                
+MINNESOTA                                     56068004                          
+                                             2                                  
+                                                                                
+ILLINOIS                                      50015000                          
+                                             3                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+CALIFORNIA                                    50000000                          
+                                             4                                  
+                                                                                
+WASHINGTON                                    50000000                          
+                                             4                                  
+                                                                                
+SOUTH DAKOTA                                  20024003                          
+                                             6                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+KANSAS                                        14422081                          
+                                             7                                  
+                                                                                
+IOWA                                          11658895                          
+                                             8                                  
+                                                                                
+MICHIGAN                                      11550000                          
+                                             9                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+TEXAS                                         10968041                          
+                                            10                                  
+                                                                                
+MISSOURI                                       8595040                          
+                                            11                                  
+                                                                                
+ALABAMA                                        6310000                          
+                                            12                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+PENNSYLVANIA                                   5505001                          
+                                            13                                  
+                                                                                
+NEW YORK                                       5055001                          
+                                            14                                  
+                                                                                
+WISCONSIN                                      5005016                          
+                                            15                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+NORTH CAROLINA                                 5005000                          
+                                            16                                  
+                                                                                
+NEW MEXICO                                     5000000                          
+                                            17                                  
+                                                                                
+SOUTH CAROLINA                                 5000000                          
+                                            17                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+MONTANA                                        4825000                          
+                                            19                                  
+                                                                                
+OHIO                                           4605000                          
+                                            20                                  
+                                                                                
+NORTH DAKOTA                                   2710003                          
+                                            21                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+COLORADO                                       2370001                          
+                                            22                                  
+                                                                                
+KENTUCKY                                       1060000                          
+                                            23                                  
+                                                                                
+VIRGINIA                                        550002                          
+                                            24                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+INDIANA                                         270000                          
+                                            25                                  
+                                                                                
+OKLAHOMA                                        150000                          
+                                            26                                  
+                                                                                
+TENNESSEE                                       100000                          
+                                            27                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+GEORGIA                                          65004                          
+                                            28                                  
+                                                                                
+MARYLAND                                         60003                          
+                                            29                                  
+                                                                                
+MISSISSIPPI                                      55000                          
+                                            30                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+ARKANSAS                                         50000                          
+                                            31                                  
+                                                                                
+WEST VIRGINIA                                    15002                          
+                                            32                                  
+                                                                                
+FLORIDA                                          10001                          
+                                            33                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+LOUISIANA                                         5000                          
+                                            34                                  
+                                                                                
+ARIZONA                                           5000                          
+                                            34                                  
+                                                                                
+DELAWARE                                             0                          
+                                            36                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+RHODE ISLAND                                         0                          
+                                            36                                  
+                                                                                
+CONNECTICUT                                          0                          
+                                            36                                  
+                                                                                
+PUERTO RICO                                          0                          
+                                            36                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+OREGON                                               0                          
+                                            36                                  
+                                                                                
+NEW JERSEY                                           0                          
+                                            36                                  
+                                                                                
+IDAHO                                                0                          
+                                            36                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+NEVADA                                               0                          
+                                            36                                  
+                                                                                
+MAINE                                                0                          
+                                            36                                  
+                                                                                
+NEW HAMPSHIRE                                        0                          
+                                            36                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+WYOMING                                              0                          
+                                            36                                  
+                                                                                
+MASSACHUSETTS                                        0                          
+                                            36                                  
+                                                                                
+VERMONT                                              0                          
+                                            36                                  
+                                                                                
+
+ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
+------------------------------ -----------------------                          
+RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
+----------------------------------------------                                  
+UTAH                                                 0                          
+                                            36                                  
+                                                                                
+
+49 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 6*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Donne les 10 etats ayant subi le plus de degats sur leurs infrastructures
+SQL> 
+SQL> SELECT etat, damage_property
+  2  FROM (
+  3  	     SELECT etat, SUM(dommage_sur_propriete) AS damage_property
+  4  	     FROM Faits f, Lieu l, Dommage d
+  5  	     WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+  6  	     GROUP BY (etat)
+  7  	     ORDER BY SUM(dommage_sur_propriete) DESC
+  8  	     )
+  9  WHERE ROWNUM <=10;
+
+ETAT                           DAMAGE_PROPERTY                                  
+------------------------------ ---------------                                  
+TEXAS                                470636077                                  
+KANSAS                               105640106                                  
+TENNESSEE                             80060096                                  
+PENNSYLVANIA                          77950034                                  
+SOUTH CAROLINA                        72534003                                  
+GEORGIA                               66505093                                  
+FLORIDA                               62140054                                  
+UTAH                                  57600001                                  
+VIRGINIA                              57060018                                  
+IOWA                                  55491513                                  
+
+10 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 7*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Classe les etats en fonction du nombre de tempete qu'ils ont subis et la colonne permet de savoir que par exemple la moitie des etats ont subi 223 intempéries.
+SQL> SELECT etat, nb_tempete, NTILE(4) over(order by nb_tempete DESC) AS Quart
+  2  FROM (
+  3  	     SELECT etat, COUNT(*) AS nb_tempete
+  4  	     FROM Lieu l, Faits f
+  5  	     WHERE f.id_lieu = l.id_lieu
+  6  	     GROUP BY (etat)
+  7  	     );
+
+ETAT                           NB_TEMPETE      QUART                            
+------------------------------ ---------- ----------                            
+TEXAS                                2544          1                            
+OKLAHOMA                             1670          1                            
+KANSAS                                899          1                            
+ARKANSAS                              893          1                            
+OHIO                                  609          1                            
+IOWA                                  580          1                            
+MISSOURI                              568          1                            
+NEW YORK                              567          1                            
+NEBRASKA                              522          1                            
+PENNSYLVANIA                          461          1                            
+LOUISIANA                             456          1                            
+
+ETAT                           NB_TEMPETE      QUART                            
+------------------------------ ---------- ----------                            
+MISSISSIPPI                           423          1                            
+MINNESOTA                             387          1                            
+GEORGIA                               365          2                            
+SOUTH CAROLINA                        327          2                            
+MICHIGAN                              310          2                            
+COLORADO                              308          2                            
+ILLINOIS                              305          2                            
+WISCONSIN                             303          2                            
+FLORIDA                               303          2                            
+INDIANA                               290          2                            
+ALABAMA                               265          2                            
+
+ETAT                           NB_TEMPETE      QUART                            
+------------------------------ ---------- ----------                            
+SOUTH DAKOTA                          249          2                            
+TENNESSEE                             231          2                            
+NORTH DAKOTA                          223          2                            
+WEST VIRGINIA                         190          3                            
+NORTH CAROLINA                        144          3                            
+MONTANA                               133          3                            
+NEW MEXICO                            113          3                            
+NEW JERSEY                            109          3                            
+VIRGINIA                               99          3                            
+KENTUCKY                               89          3                            
+WYOMING                                84          3                            
+
+ETAT                           NB_TEMPETE      QUART                            
+------------------------------ ---------- ----------                            
+MAINE                                  77          3                            
+MASSACHUSETTS                          75          3                            
+ARIZONA                                67          3                            
+MARYLAND                               61          3                            
+VERMONT                                59          4                            
+UTAH                                   46          4                            
+CONNECTICUT                            45          4                            
+NEW HAMPSHIRE                          38          4                            
+CALIFORNIA                             21          4                            
+IDAHO                                  18          4                            
+NEVADA                                 16          4                            
+
+ETAT                           NB_TEMPETE      QUART                            
+------------------------------ ---------- ----------                            
+OREGON                                 11          4                            
+PUERTO RICO                            11          4                            
+WASHINGTON                              9          4                            
+DELAWARE                                8          4                            
+RHODE ISLAND                            7          4                            
+
+49 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 8*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Donne le nombre de tempete qui on causer 5M de degats sur les infrastructures par Etat (dans l'année) ou par Mois (tout Etat confondu)
+SQL> 
+SQL> SELECT mois_debut, etat, SUM(nb_tempete) AS nb_temp, GROUPING(mois_debut) AS mois, GROUPING(etat) AS state
+  2  FROM (
+  3  	     SELECT mois_debut, etat, COUNT(*) AS nb_tempete
+  4  	     FROM Lieu l, Faits f, Periode p, Dommage d
+  5  	     WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage AND dommage_sur_propriete ='5000000'
+  6  	     GROUP BY (etat,mois_debut)
+  7  	     )
+  8  GROUP BY GROUPING SETS((mois_debut),(etat))
+  9  ORDER BY nb_temp DESC;
+
+MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
+---------- ------------------------------ ---------- ---------- ----------      
+         4                                        27          0          1      
+         6                                        24          0          1      
+           TEXAS                                  23          1          0      
+         7                                        20          0          1      
+        11                                        11          0          1      
+           GEORGIA                                10          1          0      
+         3                                         9          0          1      
+         8                                         8          0          1      
+           KANSAS                                  7          1          0      
+           OHIO                                    6          1          0      
+         5                                         6          0          1      
+
+MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
+---------- ------------------------------ ---------- ---------- ----------      
+           ALABAMA                                 5          1          0      
+           NEBRASKA                                5          1          0      
+           OKLAHOMA                                5          1          0      
+           TENNESSEE                               5          1          0      
+           ARKANSAS                                4          1          0      
+           MISSOURI                                4          1          0      
+           PENNSYLVANIA                            4          1          0      
+         9                                         4          0          1      
+           MINNESOTA                               3          1          0      
+           WISCONSIN                               3          1          0      
+           MARYLAND                                3          1          0      
+
+MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
+---------- ------------------------------ ---------- ---------- ----------      
+           IOWA                                    3          1          0      
+           NEW JERSEY                              2          1          0      
+           MISSISSIPPI                             2          1          0      
+           MICHIGAN                                2          1          0      
+        10                                         2          0          1      
+         2                                         2          0          1      
+           ILLINOIS                                2          1          0      
+           INDIANA                                 2          1          0      
+           MONTANA                                 2          1          0      
+           SOUTH CAROLINA                          2          1          0      
+           UTAH                                    1          1          0      
+
+MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
+---------- ------------------------------ ---------- ---------- ----------      
+           VIRGINIA                                1          1          0      
+           FLORIDA                                 1          1          0      
+           ARIZONA                                 1          1          0      
+           NEW YORK                                1          1          0      
+           NORTH CAROLINA                          1          1          0      
+           NEW HAMPSHIRE                           1          1          0      
+           SOUTH DAKOTA                            1          1          0      
+           MASSACHUSETTS                           1          1          0      
+           CALIFORNIA                              1          1          0      
+         1                                         1          0          1      
+
+43 rows selected.
+
+SQL> 
+SQL> --******************************************************
+SQL> --****************Requête 9*****************************
+SQL> --******************************************************
+SQL> 
+SQL> --Donne le nombre de tempètes par mois ainsi que le cumul.
+SQL> 
+SQL> SELECT mois_debut, COUNT(*) AS nb_tempete, SUM(COUNT(*)) over(order by mois_debut rows unbounded preceding) AS Cumul
+  2  FROM Faits f, Periode p
+  3  WHERE f.id_periode = p.id_periode
+  4  GROUP BY mois_debut;
+
+MOIS_DEBUT NB_TEMPETE      CUMUL                                                
+---------- ---------- ----------                                                
+         1        140        140                                                
+         2         72        212                                                
+         3        390        602                                                
+         4       2845       3447                                                
+         5       2126       5573                                                
+         6       4114       9687                                                
+         7       3102      12789                                                
+         8       1272      14061                                                
+         9        466      14527                                                
+        10        457      14984                                                
+        11        579      15563                                                
+
+MOIS_DEBUT NB_TEMPETE      CUMUL                                                
+---------- ---------- ----------                                                
+        12         25      15588                                                
+
+12 rows selected.
+
+SQL> 
+SQL> SPOOL OFF;
