@@ -15,4 +15,5 @@ Détails sur les fichiers se trouvant ici :
 * Le fichier OLAP.sql regroupe toutes les requêtes OLAP pour avoir des informations sur le nombre de tornades, les degats causés etc.
 
 Pour compiler le fichier Insert_generator.cpp : g++ -Wall Insert_generator.cpp -o Insert_generator.exe
+
 Pour exécuter le fichier Insert_generator.exe : ./Insert_generator.exe ../CSV/StormEvents_details-ftp_v1.0_d1994_c20170717.csv Insert.sql
