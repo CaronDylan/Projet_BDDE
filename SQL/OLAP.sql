@@ -11,8 +11,8 @@ SET SERVEROUTPUT ON SIZE 2000;
 --Permet de voir les degats causés sur les propriétes par chacun des types d'intempérie pour chaque mois et voir les degats totaux sur l'année
 
 SELECT mois_debut, type_tempete, SUM(dommage_sur_propriete)
-FROM Faits f, Tempete t, Periode p, Dommage d
-WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage
+FROM Faits f, Tempete t, Periode p
+WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode
 GROUP BY ROLLUP(mois_debut, type_tempete); 
 
 --******************************************************
@@ -22,8 +22,8 @@ GROUP BY ROLLUP(mois_debut, type_tempete);
 --Permet de voir les degats causés par les types de tempete sur chacun des mois et les  degats totaux provoqué par l'ensemble des intempéries sur chacun des mois
 
 SELECT mois_debut, type_tempete, SUM(dommage_sur_propriete  + dommage_sur_champs) AS dommage_cause
-FROM Faits f, Tempete t, Periode p, Dommage d
-WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage
+FROM Faits f, Tempete t, Periode p
+WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode
 GROUP BY CUBE(mois_debut, type_tempete);
 
 
@@ -63,8 +63,8 @@ GROUP BY GROUPING SETS((etat),(mois_debut),());
 
 SELECT etat, SUM(dommage_sur_champs) AS SUM_champs,
 	rank() over (order by SUM(dommage_sur_champs) desc) AS Rank
-FROM Faits f, Lieu l, Dommage d
-WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+FROM Faits f, Lieu l
+WHERE f.id_lieu = l.id_lieu
 GROUP BY (etat);
 
 --******************************************************
@@ -76,8 +76,8 @@ GROUP BY (etat);
 SELECT etat, damage_property
 FROM (
 	SELECT etat, SUM(dommage_sur_propriete) AS damage_property
-	FROM Faits f, Lieu l, Dommage d
-	WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+	FROM Faits f, Lieu l
+	WHERE f.id_lieu = l.id_lieu
 	GROUP BY (etat)
 	ORDER BY SUM(dommage_sur_propriete) DESC
 	)
@@ -105,8 +105,8 @@ FROM (
 SELECT mois_debut, etat, SUM(nb_tempete) AS nb_temp, GROUPING(mois_debut) AS mois, GROUPING(etat) AS state
 FROM (
 	SELECT mois_debut, etat, COUNT(*) AS nb_tempete
-	FROM Lieu l, Faits f, Periode p, Dommage d
-	WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage AND dommage_sur_propriete ='5000000'
+	FROM Lieu l, Faits f, Periode p
+	WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode AND dommage_sur_propriete ='5000000'
 	GROUP BY (etat,mois_debut)
 	)
 GROUP BY GROUPING SETS((mois_debut),(etat))

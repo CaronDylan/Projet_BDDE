@@ -132,12 +132,13 @@ int main(int argc, char const *argv[]) {
 		while(id<LIMIT && read.get(caracter)){
 			if(caracter==',' && in_attribut==0) {cptvirgule++;} else {
 				if(caracter=='\n') {
+					//Fin de la lecture d'une ligne
+	
 					id++;
 					write << insert[0] +to_string(id)+","+pcurrent.annee_debut+","+pcurrent.mois_debut+","+pcurrent.jour_debut+","+/*pcurrent.heure_debut+","+pcurrent.min_debut+","+*/pcurrent.annee_fin+","+pcurrent.mois_fin+","+pcurrent.jour_fin+/*","+pcurrent.heure_fin+","+pcurrent.min_fin+*/");" <<endl;
 					write << insert[1] +to_string(id)+","+lcurrent.etat+","+lcurrent.ville+");"<<endl;
 					write << insert[2] +to_string(id)+","+tcurrent.type_tempete+");"<<endl;
-					write << insert[3] +to_string(id)+","+dcurrent.propriete+","+dcurrent.agriculture+");"<<endl;
-					write << insert[4] +to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+/*","+fcurrent.resume+*/");"<<endl;
+					write << insert[4] +to_string(id)+","+to_string(id)+","+to_string(id)+","+to_string(id)+","+dcurrent.propriete+","+dcurrent.agriculture+");"<<endl;
 					write <<endl;
 
 					//Reinitialisation des variables propres a chacunes des lignes
@@ -154,6 +155,9 @@ int main(int argc, char const *argv[]) {
 					dcurrent=init_dommage();
 					fcurrent=init_faits();
 				} else {
+
+					//Chaque commentaire qui suis fais reference à une colonne du CSV
+
 					//BEGIN_YEARMONTH			
 					if(cptvirgule==0) {
 						cptanne_month_deb++;

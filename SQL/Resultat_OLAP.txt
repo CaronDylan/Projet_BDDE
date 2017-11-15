@@ -9,8 +9,8 @@ SQL>
 SQL> --Permet de voir les degats causés sur les propriétes par chacun des types d'intempérie pour chaque mois et voir les degats totaux sur l'année
 SQL> 
 SQL> SELECT mois_debut, type_tempete, SUM(dommage_sur_propriete)
-  2  FROM Faits f, Tempete t, Periode p, Dommage d
-  3  WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage
+  2  FROM Faits f, Tempete t, Periode p
+  3  WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode
   4  GROUP BY ROLLUP(mois_debut, type_tempete);
 
 MOIS_DEBUT TYPE_TEMPETE                   SUM(DOMMAGE_SUR_PROPRIETE)            
@@ -89,8 +89,8 @@ SQL>
 SQL> --Permet de voir les degats causés par les types de tempete sur chacun des mois et les  degats totaux provoqué par l'ensemble des intempéries sur chacun des mois
 SQL> 
 SQL> SELECT mois_debut, type_tempete, SUM(dommage_sur_propriete  + dommage_sur_champs) AS dommage_cause
-  2  FROM Faits f, Tempete t, Periode p, Dommage d
-  3  WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage
+  2  FROM Faits f, Tempete t, Periode p
+  3  WHERE f.id_tempete = t.id_tempete AND f.id_periode = p.id_periode
   4  GROUP BY CUBE(mois_debut, type_tempete);
 
 MOIS_DEBUT TYPE_TEMPETE                   DOMMAGE_CAUSE                         
@@ -650,31 +650,31 @@ SQL> SELECT etat, mois_debut, SUM(nb_tempete) AS nb_tempete
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
-IOWA                                             580                            
-ARKANSAS                                         893                            
 ARIZONA                                           67                            
+ARKANSAS                                         893                            
+IOWA                                             580                            
 VERMONT                                           59                            
 NEW HAMPSHIRE                                     38                            
-KENTUCKY                                          89                            
-MISSISSIPPI                                      423                            
 MICHIGAN                                         310                            
+MISSISSIPPI                                      423                            
+KENTUCKY                                          89                            
 COLORADO                                         308                            
 NORTH DAKOTA                                     223                            
-OHIO                                             609                            
+NEW JERSEY                                       109                            
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
-NEW JERSEY                                       109                            
+OHIO                                             609                            
 ALABAMA                                          265                            
 FLORIDA                                          303                            
 UTAH                                              46                            
 VIRGINIA                                          99                            
 ILLINOIS                                         305                            
 KANSAS                                           899                            
+MASSACHUSETTS                                     75                            
 OKLAHOMA                                        1670                            
 PENNSYLVANIA                                     461                            
 SOUTH DAKOTA                                     249                            
-MASSACHUSETTS                                     75                            
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
@@ -684,23 +684,23 @@ NEBRASKA                                         522
 WASHINGTON                                         9                            
 SOUTH CAROLINA                                   327                            
 WYOMING                                           84                            
-TENNESSEE                                        231                            
 TEXAS                                           2544                            
+TENNESSEE                                        231                            
 MAINE                                             77                            
 MONTANA                                          133                            
-NEW YORK                                         567                            
+GEORGIA                                          365                            
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
-GEORGIA                                          365                            
+NEW YORK                                         567                            
 MARYLAND                                          61                            
 IDAHO                                             18                            
 NEW MEXICO                                       113                            
 NEVADA                                            16                            
 MISSOURI                                         568                            
 CALIFORNIA                                        21                            
-PUERTO RICO                                       11                            
 OREGON                                            11                            
+PUERTO RICO                                       11                            
 LOUISIANA                                        456                            
 INDIANA                                          290                            
 
@@ -739,8 +739,8 @@ SQL> --Classe les etats en fonction des degats subis sur les champs
 SQL> 
 SQL> SELECT etat, SUM(dommage_sur_champs) AS SUM_champs,
   2  	     rank() over (order by SUM(dommage_sur_champs) desc) AS Rank
-  3  FROM Faits f, Lieu l, Dommage d
-  4  WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+  3  FROM Faits f, Lieu l
+  4  WHERE f.id_lieu = l.id_lieu
   5  GROUP BY (etat);
 
 ETAT                           SUM_CHAMPS       RANK                            
@@ -748,8 +748,8 @@ ETAT                           SUM_CHAMPS       RANK
 NEBRASKA                        167065001          1                            
 MINNESOTA                        56068004          2                            
 ILLINOIS                         50015000          3                            
-CALIFORNIA                       50000000          4                            
 WASHINGTON                       50000000          4                            
+CALIFORNIA                       50000000          4                            
 SOUTH DAKOTA                     20024003          6                            
 KANSAS                           14422081          7                            
 IOWA                             11658895          8                            
@@ -789,13 +789,13 @@ ETAT                           SUM_CHAMPS       RANK
 ------------------------------ ---------- ----------                            
 ARIZONA                              5000         34                            
 LOUISIANA                            5000         34                            
-DELAWARE                                0         36                            
 RHODE ISLAND                            0         36                            
+DELAWARE                                0         36                            
 CONNECTICUT                             0         36                            
 PUERTO RICO                             0         36                            
 OREGON                                  0         36                            
-NEVADA                                  0         36                            
 IDAHO                                   0         36                            
+NEVADA                                  0         36                            
 MAINE                                   0         36                            
 WYOMING                                 0         36                            
 
@@ -819,8 +819,8 @@ SQL>
 SQL> SELECT etat, damage_property
   2  FROM (
   3  	     SELECT etat, SUM(dommage_sur_propriete) AS damage_property
-  4  	     FROM Faits f, Lieu l, Dommage d
-  5  	     WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+  4  	     FROM Faits f, Lieu l
+  5  	     WHERE f.id_lieu = l.id_lieu
   6  	     GROUP BY (etat)
   7  	     ORDER BY SUM(dommage_sur_propriete) DESC
   8  	     )
@@ -878,8 +878,8 @@ SOUTH CAROLINA                        327          2
 MICHIGAN                              310          2                            
 COLORADO                              308          2                            
 ILLINOIS                              305          2                            
-WISCONSIN                             303          2                            
 FLORIDA                               303          2                            
+WISCONSIN                             303          2                            
 INDIANA                               290          2                            
 ALABAMA                               265          2                            
 
@@ -931,8 +931,8 @@ SQL>
 SQL> SELECT mois_debut, etat, SUM(nb_tempete) AS nb_temp, GROUPING(mois_debut) AS mois, GROUPING(etat) AS state
   2  FROM (
   3  	     SELECT mois_debut, etat, COUNT(*) AS nb_tempete
-  4  	     FROM Lieu l, Faits f, Periode p, Dommage d
-  5  	     WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode AND f.id_dommage = d.id_dommage AND dommage_sur_propriete ='5000000'
+  4  	     FROM Lieu l, Faits f, Periode p
+  5  	     WHERE f.id_lieu = l.id_lieu AND f.id_periode = p.id_periode AND dommage_sur_propriete ='5000000'
   6  	     GROUP BY (etat,mois_debut)
   7  	     )
   8  GROUP BY GROUPING SETS((mois_debut),(etat))
@@ -954,9 +954,9 @@ MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE
 
 MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
 ---------- ------------------------------ ---------- ---------- ----------      
-           OKLAHOMA                                5          1          0      
            ALABAMA                                 5          1          0      
            NEBRASKA                                5          1          0      
+           OKLAHOMA                                5          1          0      
            TENNESSEE                               5          1          0      
            ARKANSAS                                4          1          0      
            MISSOURI                                4          1          0      
@@ -969,7 +969,6 @@ MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE
 MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
 ---------- ------------------------------ ---------- ---------- ----------      
            IOWA                                    3          1          0      
-           SOUTH CAROLINA                          2          1          0      
            NEW JERSEY                              2          1          0      
            MISSISSIPPI                             2          1          0      
            MICHIGAN                                2          1          0      
@@ -978,19 +977,20 @@ MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE
            ILLINOIS                                2          1          0      
            INDIANA                                 2          1          0      
            MONTANA                                 2          1          0      
-           VIRGINIA                                1          1          0      
+           SOUTH CAROLINA                          2          1          0      
+           UTAH                                    1          1          0      
 
 MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
 ---------- ------------------------------ ---------- ---------- ----------      
-           UTAH                                    1          1          0      
+           VIRGINIA                                1          1          0      
            FLORIDA                                 1          1          0      
            ARIZONA                                 1          1          0      
            NEW YORK                                1          1          0      
            NORTH CAROLINA                          1          1          0      
            NEW HAMPSHIRE                           1          1          0      
-           CALIFORNIA                              1          1          0      
            SOUTH DAKOTA                            1          1          0      
            MASSACHUSETTS                           1          1          0      
+           CALIFORNIA                              1          1          0      
          1                                         1          0          1      
 
 43 rows selected.
