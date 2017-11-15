@@ -1,6 +1,6 @@
 # Projet Entrepôt de données
 
-L'entrepôt regroupe toutes les tempêtes (tornade, grèle, canicule ,etc.) qui se sont déroulées au Etats Unies. Le schéma de l'entrepôt se trouve dans le Rapport (c'est aussi le fichier Schema BDD.dia).
+L'entrepôt regroupe toutes les tempêtes (tornade, grèle, canicule ,etc.) qui se sont déroulées au Etats Unis. Le schéma de l'entrepôt se trouve dans le Rapport (c'est aussi le fichier Schema BDD.dia).
 
 Lien des données : https://www.ncdc.noaa.gov/stormevents/ftp.jsp
 
