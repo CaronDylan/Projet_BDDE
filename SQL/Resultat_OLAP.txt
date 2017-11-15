@@ -1,4 +1,3 @@
-SQL> SET ECHO ON;
 SQL> SET SERVEROUTPUT ON SIZE 2000;
 SQL> 
 SQL> 
@@ -651,21 +650,21 @@ SQL> SELECT etat, mois_debut, SUM(nb_tempete) AS nb_tempete
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
+IOWA                                             580                            
 ARKANSAS                                         893                            
 ARIZONA                                           67                            
-IOWA                                             580                            
 VERMONT                                           59                            
 NEW HAMPSHIRE                                     38                            
-MICHIGAN                                         310                            
-MISSISSIPPI                                      423                            
 KENTUCKY                                          89                            
+MISSISSIPPI                                      423                            
+MICHIGAN                                         310                            
 COLORADO                                         308                            
 NORTH DAKOTA                                     223                            
-NEW JERSEY                                       109                            
+OHIO                                             609                            
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
-OHIO                                             609                            
+NEW JERSEY                                       109                            
 ALABAMA                                          265                            
 FLORIDA                                          303                            
 UTAH                                              46                            
@@ -674,8 +673,8 @@ ILLINOIS                                         305
 KANSAS                                           899                            
 OKLAHOMA                                        1670                            
 PENNSYLVANIA                                     461                            
-MASSACHUSETTS                                     75                            
 SOUTH DAKOTA                                     249                            
+MASSACHUSETTS                                     75                            
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
@@ -685,23 +684,23 @@ NEBRASKA                                         522
 WASHINGTON                                         9                            
 SOUTH CAROLINA                                   327                            
 WYOMING                                           84                            
-MAINE                                             77                            
-TEXAS                                           2544                            
 TENNESSEE                                        231                            
+TEXAS                                           2544                            
+MAINE                                             77                            
 MONTANA                                          133                            
-GEORGIA                                          365                            
+NEW YORK                                         567                            
 
 ETAT                           MOIS_DEBUT NB_TEMPETE                            
 ------------------------------ ---------- ----------                            
-NEW YORK                                         567                            
+GEORGIA                                          365                            
 MARYLAND                                          61                            
 IDAHO                                             18                            
 NEW MEXICO                                       113                            
 NEVADA                                            16                            
 MISSOURI                                         568                            
 CALIFORNIA                                        21                            
-OREGON                                            11                            
 PUERTO RICO                                       11                            
+OREGON                                            11                            
 LOUISIANA                                        456                            
 INDIANA                                          290                            
 
@@ -738,242 +737,75 @@ SQL> --******************************************************
 SQL> 
 SQL> --Classe les etats en fonction des degats subis sur les champs
 SQL> 
-SQL> SELECT etat, SUM(dommage_sur_champs), rank() over (order by SUM(dommage_sur_champs) desc)
-  2  FROM Faits f, Lieu l, Dommage d
-  3  WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
-  4  GROUP BY (etat);
+SQL> SELECT etat, SUM(dommage_sur_champs) AS SUM_champs,
+  2  	     rank() over (order by SUM(dommage_sur_champs) desc) AS Rank
+  3  FROM Faits f, Lieu l, Dommage d
+  4  WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
+  5  GROUP BY (etat);
 
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-NEBRASKA                                     167065001                          
-                                             1                                  
-                                                                                
-MINNESOTA                                     56068004                          
-                                             2                                  
-                                                                                
-ILLINOIS                                      50015000                          
-                                             3                                  
-                                                                                
+ETAT                           SUM_CHAMPS       RANK                            
+------------------------------ ---------- ----------                            
+NEBRASKA                        167065001          1                            
+MINNESOTA                        56068004          2                            
+ILLINOIS                         50015000          3                            
+CALIFORNIA                       50000000          4                            
+WASHINGTON                       50000000          4                            
+SOUTH DAKOTA                     20024003          6                            
+KANSAS                           14422081          7                            
+IOWA                             11658895          8                            
+MICHIGAN                         11550000          9                            
+TEXAS                            10968041         10                            
+MISSOURI                          8595040         11                            
 
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-CALIFORNIA                                    50000000                          
-                                             4                                  
-                                                                                
-WASHINGTON                                    50000000                          
-                                             4                                  
-                                                                                
-SOUTH DAKOTA                                  20024003                          
-                                             6                                  
-                                                                                
+ETAT                           SUM_CHAMPS       RANK                            
+------------------------------ ---------- ----------                            
+ALABAMA                           6310000         12                            
+PENNSYLVANIA                      5505001         13                            
+NEW YORK                          5055001         14                            
+WISCONSIN                         5005016         15                            
+NORTH CAROLINA                    5005000         16                            
+NEW MEXICO                        5000000         17                            
+SOUTH CAROLINA                    5000000         17                            
+MONTANA                           4825000         19                            
+OHIO                              4605000         20                            
+NORTH DAKOTA                      2710003         21                            
+COLORADO                          2370001         22                            
 
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-KANSAS                                        14422081                          
-                                             7                                  
-                                                                                
-IOWA                                          11658895                          
-                                             8                                  
-                                                                                
-MICHIGAN                                      11550000                          
-                                             9                                  
-                                                                                
+ETAT                           SUM_CHAMPS       RANK                            
+------------------------------ ---------- ----------                            
+KENTUCKY                          1060000         23                            
+VIRGINIA                           550002         24                            
+INDIANA                            270000         25                            
+OKLAHOMA                           150000         26                            
+TENNESSEE                          100000         27                            
+GEORGIA                             65004         28                            
+MARYLAND                            60003         29                            
+MISSISSIPPI                         55000         30                            
+ARKANSAS                            50000         31                            
+WEST VIRGINIA                       15002         32                            
+FLORIDA                             10001         33                            
 
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-TEXAS                                         10968041                          
-                                            10                                  
-                                                                                
-MISSOURI                                       8595040                          
-                                            11                                  
-                                                                                
-ALABAMA                                        6310000                          
-                                            12                                  
-                                                                                
+ETAT                           SUM_CHAMPS       RANK                            
+------------------------------ ---------- ----------                            
+ARIZONA                              5000         34                            
+LOUISIANA                            5000         34                            
+DELAWARE                                0         36                            
+RHODE ISLAND                            0         36                            
+CONNECTICUT                             0         36                            
+PUERTO RICO                             0         36                            
+OREGON                                  0         36                            
+NEVADA                                  0         36                            
+IDAHO                                   0         36                            
+MAINE                                   0         36                            
+WYOMING                                 0         36                            
 
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-PENNSYLVANIA                                   5505001                          
-                                            13                                  
-                                                                                
-NEW YORK                                       5055001                          
-                                            14                                  
-                                                                                
-WISCONSIN                                      5005016                          
-                                            15                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-NORTH CAROLINA                                 5005000                          
-                                            16                                  
-                                                                                
-NEW MEXICO                                     5000000                          
-                                            17                                  
-                                                                                
-SOUTH CAROLINA                                 5000000                          
-                                            17                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-MONTANA                                        4825000                          
-                                            19                                  
-                                                                                
-OHIO                                           4605000                          
-                                            20                                  
-                                                                                
-NORTH DAKOTA                                   2710003                          
-                                            21                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-COLORADO                                       2370001                          
-                                            22                                  
-                                                                                
-KENTUCKY                                       1060000                          
-                                            23                                  
-                                                                                
-VIRGINIA                                        550002                          
-                                            24                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-INDIANA                                         270000                          
-                                            25                                  
-                                                                                
-OKLAHOMA                                        150000                          
-                                            26                                  
-                                                                                
-TENNESSEE                                       100000                          
-                                            27                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-GEORGIA                                          65004                          
-                                            28                                  
-                                                                                
-MARYLAND                                         60003                          
-                                            29                                  
-                                                                                
-MISSISSIPPI                                      55000                          
-                                            30                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-ARKANSAS                                         50000                          
-                                            31                                  
-                                                                                
-WEST VIRGINIA                                    15002                          
-                                            32                                  
-                                                                                
-FLORIDA                                          10001                          
-                                            33                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-LOUISIANA                                         5000                          
-                                            34                                  
-                                                                                
-ARIZONA                                           5000                          
-                                            34                                  
-                                                                                
-DELAWARE                                             0                          
-                                            36                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-RHODE ISLAND                                         0                          
-                                            36                                  
-                                                                                
-CONNECTICUT                                          0                          
-                                            36                                  
-                                                                                
-PUERTO RICO                                          0                          
-                                            36                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-OREGON                                               0                          
-                                            36                                  
-                                                                                
-NEW JERSEY                                           0                          
-                                            36                                  
-                                                                                
-IDAHO                                                0                          
-                                            36                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-NEVADA                                               0                          
-                                            36                                  
-                                                                                
-MAINE                                                0                          
-                                            36                                  
-                                                                                
-NEW HAMPSHIRE                                        0                          
-                                            36                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-WYOMING                                              0                          
-                                            36                                  
-                                                                                
-MASSACHUSETTS                                        0                          
-                                            36                                  
-                                                                                
-VERMONT                                              0                          
-                                            36                                  
-                                                                                
-
-ETAT                           SUM(DOMMAGE_SUR_CHAMPS)                          
------------------------------- -----------------------                          
-RANK()OVER(ORDERBYSUM(DOMMAGE_SUR_CHAMPS)DESC)                                  
-----------------------------------------------                                  
-UTAH                                                 0                          
-                                            36                                  
-                                                                                
+ETAT                           SUM_CHAMPS       RANK                            
+------------------------------ ---------- ----------                            
+MASSACHUSETTS                           0         36                            
+UTAH                                    0         36                            
+NEW JERSEY                              0         36                            
+NEW HAMPSHIRE                           0         36                            
+VERMONT                                 0         36                            
 
 49 rows selected.
 
@@ -1081,8 +913,8 @@ NEVADA                                 16          4
 
 ETAT                           NB_TEMPETE      QUART                            
 ------------------------------ ---------- ----------                            
-OREGON                                 11          4                            
 PUERTO RICO                            11          4                            
+OREGON                                 11          4                            
 WASHINGTON                              9          4                            
 DELAWARE                                8          4                            
 RHODE ISLAND                            7          4                            
@@ -1122,9 +954,9 @@ MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE
 
 MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
 ---------- ------------------------------ ---------- ---------- ----------      
+           OKLAHOMA                                5          1          0      
            ALABAMA                                 5          1          0      
            NEBRASKA                                5          1          0      
-           OKLAHOMA                                5          1          0      
            TENNESSEE                               5          1          0      
            ARKANSAS                                4          1          0      
            MISSOURI                                4          1          0      
@@ -1137,6 +969,7 @@ MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE
 MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
 ---------- ------------------------------ ---------- ---------- ----------      
            IOWA                                    3          1          0      
+           SOUTH CAROLINA                          2          1          0      
            NEW JERSEY                              2          1          0      
            MISSISSIPPI                             2          1          0      
            MICHIGAN                                2          1          0      
@@ -1145,20 +978,19 @@ MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE
            ILLINOIS                                2          1          0      
            INDIANA                                 2          1          0      
            MONTANA                                 2          1          0      
-           SOUTH CAROLINA                          2          1          0      
-           UTAH                                    1          1          0      
+           VIRGINIA                                1          1          0      
 
 MOIS_DEBUT ETAT                              NB_TEMP       MOIS      STATE      
 ---------- ------------------------------ ---------- ---------- ----------      
-           VIRGINIA                                1          1          0      
+           UTAH                                    1          1          0      
            FLORIDA                                 1          1          0      
            ARIZONA                                 1          1          0      
            NEW YORK                                1          1          0      
            NORTH CAROLINA                          1          1          0      
            NEW HAMPSHIRE                           1          1          0      
+           CALIFORNIA                              1          1          0      
            SOUTH DAKOTA                            1          1          0      
            MASSACHUSETTS                           1          1          0      
-           CALIFORNIA                              1          1          0      
          1                                         1          0          1      
 
 43 rows selected.
