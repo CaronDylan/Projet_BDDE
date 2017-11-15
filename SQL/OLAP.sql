@@ -61,7 +61,8 @@ GROUP BY GROUPING SETS((etat),(mois_debut),());
 
 --Classe les etats en fonction des degats subis sur les champs
 
-SELECT etat, SUM(dommage_sur_champs), rank() over (order by SUM(dommage_sur_champs) desc)
+SELECT etat, SUM(dommage_sur_champs) AS SUM_champs,
+	rank() over (order by SUM(dommage_sur_champs) desc) AS Rank
 FROM Faits f, Lieu l, Dommage d
 WHERE f.id_lieu = l.id_lieu AND f.id_dommage = d.id_dommage
 GROUP BY (etat);
